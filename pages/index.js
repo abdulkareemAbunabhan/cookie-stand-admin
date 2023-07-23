@@ -1,9 +1,9 @@
 import { reactStrictMode } from "@/next.config";
 import {useEffect, useState } from "react";
+import Head from 'next/head';
 
 export default function Home() {
   const [formData, SetFormData] = useState(["location","minimum customers","maximum customers","average customers"]);
-  const [tableData,SetTableData] = useState([])
   function formHandler(e){
       e.preventDefault()
       const loc=e.target.location.value
@@ -11,25 +11,25 @@ export default function Home() {
       const max=e.target.maximum.value
       const ave=e.target.average.value
       SetFormData([loc,min,max,ave])
-      SetTableData([...tableData,[loc,min,max,ave]])
   }
   return (
     <>
-      <head>
+      <Head>
         <title>Cookie Stand Admin</title>
-      </head>
-      <body className="w-full bg-slate-100 min-h-screen">
+      </Head>
+      <div className="w-full bg-slate-100 min-h-screen">
         {/* {Header} */}
         <Header />
         <main className="flex flex-col items-center center mt-8">
           {/* {Form} */}
           <Form handler={formHandler} data={formData}/>
           {/* {Result Teble} */}
-          <Result table={tableData}/>
+          
+          <h3>{JSON.stringify({'location':formData[0],'Minimum customer per hour':formData[1],'Maximum customer per hour':formData[2],'Average sales per hour':formData[3]})}</h3> 
 
         </main>
         <footer className="bg-green-500 space-x-reverse border-b-8 border-black w-full relative bottom-0">&copy; Cookie Stand ltd</footer>
-      </body>
+      </div>
     </>
   );
 }
@@ -79,38 +79,3 @@ function Form(props) {
   );
 }
 
-function Result(props){
-    const rest_of = props.table.map((item, index) => (
-      <tr key={index} >
-        <td>{item[0]}</td>
-        <td>{item[1]}</td>
-        <td>{item[2]}</td>
-        <td>{item[3]}</td>
-      </tr>
-    ));
-    if (props.table.length > 0 ){
-      return(
-      <table className="border-2 border-black mb-3">
-        <thead><tr>
-          <th>
-            Location
-          </th>
-          <th>
-            Minimum customers per hour
-          </th>
-          <th>
-            maximum customers per hour
-          </th>
-          <th>
-            average sales per hour
-          </th>
-        </tr></thead>
-        <tbody>{rest_of}</tbody>
-      </table>
-    )
-    }else{
-      return(
-        <h3>Report Table Coming Soon ...</h3>
-      )
-    }
-}
